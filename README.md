@@ -177,5 +177,37 @@ vcType.init()
 
 
 
+### throws and rethrows
 
+throw 表示该函数可能抛出异常,使用该函数的时候需要与try配合使用
+eg:
+
+```
+func throwCustomError(function:(String) throws -> ()) throws {
+	try function("throws string")
+}
+
+try throwCustomError { print("\($0)") }
+```
+
+rethrows
+一个函数或方法如果被声明为rethrows，表示函数或方法的参数有可能抛出异常（it's funciton parameters throws an error）
+
+A typical example is the map method
+
+```
+public func map<T>(_ transform: (Element) throws -> T) rethrows -> [T]
+```
+
+在使用该方法的时候不一定需要配合try来使用
+
+```
+func rethrowCustomError(function:(String) throws -> ()) throws {
+	try function("throws string")
+}
+rethrowCustomError { print("\($0)") }
+```
+
+### JSONEncoder and JSONDecoder
+json解析的对象，理论上可以不用导入HandlyJosn这类第三方库了. 对象需要遵守codable(encodable & decodable)协议
 
