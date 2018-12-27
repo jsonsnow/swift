@@ -113,6 +113,8 @@ extension ErrorHandler where Self: UIViewController {
 ```
 现在、任何符合ErrorHandler协议的试图控制器都有了handle方法的默认实现
 
+__不能扩展已有的方法__, 可扩展会造成系统方法被重写，
+
 
 __以上是我在学习swift协议内容觉得重要和精髓的部分__。
 
