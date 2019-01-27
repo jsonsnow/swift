@@ -213,3 +213,87 @@ rethrowCustomError { print("\($0)") }
 ### JSONEncoder and JSONDecoder
 json解析的对象，理论上可以不用导入HandlyJosn这类第三方库了. 对象需要遵守codable(encodable & decodable)协议
 
+### 运算符重载、自定义运算符
+
+* 支持自定义运算符 / = - + * % < > ! & | ^ . ~的任意组合
+* 支持前缀（~,!, ++, --）,后缀(++, --),中缀(* / 等等)
+* 支持自定义优先级
+
+__运算符重载通过函数定义来完成，其实运算符就是一个一元函数，或者是二元函数__,注意类内重载需要为静态方法。
+
+#### 运算符重载
+##### 前缀运算符
+```
+struct Vectory2D {
+	var x = 0.0, y = 0.0
+}
+
+prefix func - (vertor: Vectory2D) -> Vectory2D {
+	return Vectory2D(x: -vertor.x, y: -vertor.y)
+}
+
+```
+##### 中缀运算符重载
+```
+func + (left: Vectory2D, right: Vectory2D) -> Vectory2D {
+	return Vectory2D(x: left.x + right.x, y: left.y + right.y)
+
+```
+##### 后缀运算符
+```
+postfix func --( vertor: inout Vectory2D) -> Vectory2D {
+	vertor.x = vertor.x - 1
+	vertor.y = vertor.y - 1
+	return vertor
+}
+
+```
+
+#### 自定义运算符
+
+自定义运算符形式如下
+
+```
+infix operator +*
+```
+当然我们还可以指定操作符的优先级，不指定则默认，系统提供有MultiplicationPrecedence、AdditionPrecedence，这些优先级
+
+指定优先级为MultiplicationPrecedence的形式为
+
+```
+infix operator +*: MultiplicationPrecedence
+```
+
+当然我们可以自定义，语法如下
+
+```
+precedencegroup precedence group name {
+	higherThan: lower group names
+	lowerThan: higher group names
+	associativity: associativity
+	assignment: assignment
+}
+
+```
+
+eg:
+
+```
+// 自定义操作符 别名类型
+infix operator +*: InnerProductPrecedence
+// 自定义操作符的运算优先级
+precedencegroup InnerProductPrecedence {
+//    结合律：内积的结果是一个 Double，不再会和其他内积结合使用，所以这里写成 none
+    associativity: none
+//    优先级设置：高于普通运算。
+//    MultiplicationPrecedence（代表乘法和除法）
+//    AdditionPrecedence（代表加法和减法）
+    higherThan: MultiplicationPrecedence, AdditionPrecedence
+}
+
+```
+
+
+
+
+
